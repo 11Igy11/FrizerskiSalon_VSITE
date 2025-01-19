@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\FrizerskiSalon_VSITE.props" />
+</Project>

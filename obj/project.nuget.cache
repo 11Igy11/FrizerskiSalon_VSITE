@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "ZWQfgz2NOQw=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\FrizerskiSalon_VSITE.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Korisnik\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.10\\microsoft.netcore.app.host.win-x64.8.0.10.nupkg.sha512"
+  ],
+  "logs": []
+}
