@@ -5,12 +5,20 @@
       "PackagePath": "staticwebassets\\FrizerskiSalon_VSITE.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\wwwroot\\css\\custom.css",
+      "PackagePath": "staticwebassets\\css\\custom.css"
+    },
+    {
       "Id": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
       "Id": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\wwwroot\\images\\Home_page.jpeg",
+      "PackagePath": "staticwebassets\\images\\Home_page.jpeg"
     },
     {
       "Id": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\wwwroot\\js\\site.js",

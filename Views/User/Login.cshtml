@@ -1,0 +1,17 @@
+﻿@model FrizerskiSalon_VSITE.Models.LoginViewModel
+
+<form method="post">
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input asp-for="Email" class="form-control" id="Email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Password">Lozinka</label>
+        <input asp-for="Password" type="password" class="form-control" id="Password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Prijavi se</button>
+</form>
+
+<p>Nemate račun? <a href="/User/Register">Registrirajte se</a></p>

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "XMy9QsMqATta4uZDaIwwTpD0PivAVGvvsHbBVY5eZJA=",
+  "Hash": "bQGKSfUDY3/I220wmKU/vfnfDYTk110HF7x98ZXXz2E=",
   "Source": "FrizerskiSalon_VSITE",
   "BasePath": "_content/FrizerskiSalon_VSITE",
   "Mode": "Default",
@@ -55,6 +55,25 @@
       "OriginalItemSpec": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FrizerskiSalon_VSITE.bundle.scp.css"
     },
     {
+      "Identity": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\wwwroot\\css\\custom.css",
+      "SourceId": "FrizerskiSalon_VSITE",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\wwwroot\\",
+      "BasePath": "_content/FrizerskiSalon_VSITE",
+      "RelativePath": "css/custom.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\custom.css"
+    },
+    {
       "Identity": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\wwwroot\\css\\site.css",
       "SourceId": "FrizerskiSalon_VSITE",
       "SourceType": "Discovered",
@@ -91,6 +110,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\wwwroot\\images\\Home_page.jpeg",
+      "SourceId": "FrizerskiSalon_VSITE",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\wwwroot\\",
+      "BasePath": "_content/FrizerskiSalon_VSITE",
+      "RelativePath": "images/Home_page.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\Home_page.jpeg"
     },
     {
       "Identity": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\wwwroot\\js\\site.js",

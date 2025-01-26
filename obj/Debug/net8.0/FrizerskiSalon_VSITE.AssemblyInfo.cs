@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FrizerskiSalon_VSITE")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+62cf3ec0dcee4701da9ee36c7163f423cbb6738e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ea780eb10b9ef71c5fac690e43f69cdfbe862be8")]
 [assembly: System.Reflection.AssemblyProductAttribute("FrizerskiSalon_VSITE")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FrizerskiSalon_VSITE")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
