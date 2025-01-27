@@ -1,0 +1,30 @@
+﻿@model FrizerskiSalon_VSITE.Models.Reservation
+
+<h2>Uredi rezervaciju</h2>
+
+<form asp-action="EditReservation" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label for="CustomerName">Ime korisnika</label>
+        <input asp-for="CustomerName" class="form-control" />
+        <span asp-validation-for="CustomerName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="ReservationDate">Datum</label>
+        <input asp-for="ReservationDate" type="date" class="form-control" />
+        <span asp-validation-for="ReservationDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="TimeSlot">Vrijeme</label>
+        <input asp-for="TimeSlot" class="form-control" />
+        <span asp-validation-for="TimeSlot" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="ServiceId">Usluga</label>
+        <select asp-for="ServiceId" asp-items="ViewBag.Services" class="form-control"></select>
+        <span asp-validation-for="ServiceId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Spremi promjene</button>
+</form>
+
+<a asp-action="Reservations" class="btn btn-secondary">Povratak</a>

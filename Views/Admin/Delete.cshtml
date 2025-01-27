@@ -1,0 +1,21 @@
+﻿@model FrizerskiSalon_VSITE.Models.Service
+
+<h2>Obriši uslugu</h2>
+
+<div>
+    <h4>Jeste li sigurni da želite obrisati ovu uslugu?</h4>
+    <dl class="row">
+        <dt class="col-sm-2">Naziv</dt>
+        <dd class="col-sm-10">@Model.Name</dd>
+        <dt class="col-sm-2">Opis</dt>
+        <dd class="col-sm-10">@Model.Description</dd>
+        <dt class="col-sm-2">Cijena</dt>
+        <dd class="col-sm-10">@Model.Price</dd>
+    </dl>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Obriši</button>
+        <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+    </form>
+</div>

@@ -4,33 +4,38 @@ using FrizerskiSalon_VSITE.Models;
 
 namespace FrizerskiSalon_VSITE.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User> // Koristimo svoj User model koji nasljeđuje IdentityUser
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
-        // DbSet za modele
         public DbSet<Service> Services { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
 
-        // Podesiti preciznost za decimalna polja
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);  // Pozivanje osnovne konfiguracije
+            base.OnModelCreating(modelBuilder);
 
-            // Konfiguracija za decimal (Price u Service)
+            // Konfiguracija za decimalnu preciznost
             modelBuilder.Entity<Service>()
                 .Property(s => s.Price)
-                .HasColumnType("decimal(18,2)"); // Preciznost i skala za cijenu
+                .HasColumnType("decimal(18,2)");
 
-            // Konfiguracija za stranog ključa (Reservation -> User)
+            // Konfiguracija za vezu između rezervacija i korisnika
             modelBuilder.Entity<Reservation>()
                 .HasOne(r => r.User)
                 .WithMany()
                 .HasForeignKey(r => r.UserId)
-                .OnDelete(DeleteBehavior.Cascade); // Ako brišete korisnika, brišu se i povezane rezervacije
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Konfiguracija za vezu između rezervacija i usluga
+            modelBuilder.Entity<Reservation>()
+                .HasOne(r => r.Service)
+                .WithMany()
+                .HasForeignKey(r => r.ServiceId)
+                .OnDelete(DeleteBehavior.Restrict); // Ovdje možete odabrati ponašanje brisanja
         }
     }
 }

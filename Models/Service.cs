@@ -6,12 +6,14 @@ namespace FrizerskiSalon_VSITE.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Naziv usluge je obavezan.")]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Cijena usluge je obavezna.")]
+        [Range(0, double.MaxValue, ErrorMessage = "Cijena mora biti veća od 0.")]
         public decimal Price { get; set; }
 
-        public string Description { get; set; }
+        [Required(ErrorMessage = "Opis usluge je obavezan.")]
+        public string Description { get; set; }  // Dodano polje
     }
 }

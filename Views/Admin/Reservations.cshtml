@@ -1,0 +1,31 @@
+﻿@model IEnumerable<FrizerskiSalon_VSITE.Models.Reservation>
+
+<h2>Rezervacije</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Korisnik</th>
+            <th>Usluga</th>
+            <th>Datum</th>
+            <th>Vrijeme</th>
+            <th>Akcije</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reservation in Model)
+        {
+            <tr>
+                <td>@reservation.User?.UserName</td>
+                <td>@reservation.Service?.Name</td>
+                <td>@reservation.ReservationDate.ToShortDateString()</td>
+                <td>@reservation.TimeSlot</td>
+                <td>
+                    <a asp-action="EditReservation" asp-route-id="@reservation.Id" class="btn btn-warning">Uredi</a>
+                    <a asp-action="DeleteReservation" asp-route-id="@reservation.Id" class="btn btn-danger">Obriši</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-action="Index" class="btn btn-secondary">Natrag na Admin Panel</a>
