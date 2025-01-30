@@ -1,0 +1,28 @@
+﻿@model FrizerskiSalon_VSITE.Models.Reservation
+
+<h2>Jeste li sigurni da želite obrisati rezervaciju?</h2>
+
+<div>
+    <h4>Detalji rezervacije</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Ime korisnika:</dt>
+        <dd class="col-sm-10">@Model.CustomerName</dd>
+
+        <dt class="col-sm-2">Usluga:</dt>
+        <dd class="col-sm-10">@(Model.Service != null ? Model.Service.Name : "Nepoznata usluga")</dd>
+
+
+        <dt class="col-sm-2">Datum:</dt>
+        <dd class="col-sm-10">@Model.ReservationDate.ToString("dd.MM.yyyy")</dd>
+
+        <dt class="col-sm-2">Vrijeme:</dt>
+        <dd class="col-sm-10">@Model.TimeSlot</dd>
+    </dl>
+
+    <form asp-action="DeleteReservation">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Da, obriši</button>
+        <a asp-action="Reservations" class="btn btn-secondary">Ne, odustani</a>
+    </form>
+</div>

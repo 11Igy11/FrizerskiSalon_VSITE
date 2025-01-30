@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FrizerskiSalon_VSITE.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250126032014_InitialCreate")]
+    [Migration("20250128134250_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -37,8 +37,14 @@ namespace FrizerskiSalon_VSITE.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("ReservationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
 
                     b.Property<string>("TimeSlot")
                         .IsRequired()
@@ -49,6 +55,8 @@ namespace FrizerskiSalon_VSITE.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ServiceId");
 
                     b.HasIndex("UserId");
 
@@ -283,11 +291,19 @@ namespace FrizerskiSalon_VSITE.Migrations
 
             modelBuilder.Entity("FrizerskiSalon_VSITE.Models.Reservation", b =>
                 {
+                    b.HasOne("FrizerskiSalon_VSITE.Models.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("FrizerskiSalon_VSITE.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Service");
 
                     b.Navigation("User");
                 });

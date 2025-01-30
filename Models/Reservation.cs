@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FrizerskiSalon_VSITE.Models
 {
@@ -17,9 +18,8 @@ namespace FrizerskiSalon_VSITE.Models
         [Required(ErrorMessage = "Vrijeme termina je obavezno.")]
         public string TimeSlot { get; set; } = string.Empty;
 
-        // Strani ključ za korisnika
-        [Required]
-        public string UserId { get; set; } = string.Empty;
+        // Strani ključ za korisnika – sada više NIJE obavezan
+        public string? UserId { get; set; }
 
         public User? User { get; set; } // Navigacijsko svojstvo za korisnika
 
@@ -29,7 +29,6 @@ namespace FrizerskiSalon_VSITE.Models
 
         public Service? Service { get; set; } // Navigacijsko svojstvo za uslugu
 
-        // Opcionalno polje za napomene
         public string? Notes { get; set; }
     }
 }
