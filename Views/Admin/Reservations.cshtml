@@ -21,7 +21,6 @@
                 <td>@reservation.Service?.Name</td>
                 <td>@reservation.Service?.Price €</td>
                 <td>
-                    <a asp-action="EditReservation" asp-route-id="@reservation.Id" class="btn btn-warning">Uredi</a>
                     <form asp-action="DeleteReservation" asp-route-id="@reservation.Id" method="post" style="display:inline;">
                         <button type="submit" class="btn btn-danger" onclick="return confirm('Jeste li sigurni da želite obrisati ovu rezervaciju?');">Obriši</button>
                     </form>

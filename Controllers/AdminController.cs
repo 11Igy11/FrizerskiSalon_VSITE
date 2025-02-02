@@ -22,14 +22,14 @@ namespace FrizerskiSalon_VSITE.Controllers
             _userManager = userManager;
         }
 
-        // ✅ PRIKAZ ADMIN PANELA (USLUGE + OPCIJE)
+        // PRIKAZ ADMIN PANELA (USLUGE + OPCIJE)
         public IActionResult Index()
         {
             var services = _context.Services.ToList();
             return View(services);
         }
 
-        // ✅ DODAVANJE USLUGE
+        // DODAVANJE USLUGE
         public IActionResult Create()
         {
             return View();
@@ -48,7 +48,7 @@ namespace FrizerskiSalon_VSITE.Controllers
             return View(service);
         }
 
-        // ✅ UREĐIVANJE USLUGE
+        // UREĐIVANJE USLUGE
         public async Task<IActionResult> Edit(int id)
         {
             var service = await _context.Services.FindAsync(id);
@@ -71,7 +71,7 @@ namespace FrizerskiSalon_VSITE.Controllers
             return View(service);
         }
 
-        // ✅ BRISANJE USLUGE
+        // BRISANJE USLUGE
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -97,7 +97,7 @@ namespace FrizerskiSalon_VSITE.Controllers
         }
 
 
-        // ✅ PRIKAZ SVIH REZERVACIJA
+        // PRIKAZ SVIH REZERVACIJA
         public async Task<IActionResult> Reservations()
         {
             var reservations = await _context.Reservations
@@ -107,41 +107,9 @@ namespace FrizerskiSalon_VSITE.Controllers
             return View(reservations);
         }
 
-        // ✅ UREĐIVANJE REZERVACIJE
-        public async Task<IActionResult> EditReservation(int id)
-        {
-            var reservation = await _context.Reservations.FindAsync(id);
-            if (reservation == null) return NotFound();
+        
 
-            ViewBag.Services = new SelectList(_context.Services, "Id", "Name", reservation.ServiceId);
-            ViewBag.Users = new SelectList(_context.Users, "Id", "Name", reservation.UserId);
-            return View(reservation);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditReservation(Reservation reservation)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Services = new SelectList(_context.Services, "Id", "Name", reservation.ServiceId);
-                ViewBag.Users = new SelectList(_context.Users, "Id", "Name", reservation.UserId);
-                return View(reservation);
-            }
-
-            var existingReservation = await _context.Reservations.FindAsync(reservation.Id);
-            if (existingReservation == null) return NotFound();
-
-            existingReservation.CustomerName = reservation.CustomerName;
-            existingReservation.ReservationDate = reservation.ReservationDate;
-            existingReservation.ServiceId = reservation.ServiceId;
-            existingReservation.UserId = string.IsNullOrEmpty(reservation.UserId) ? null : reservation.UserId;
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Reservations));
-        }
-
-        // ✅ BRISANJE REZERVACIJE
+        // BRISANJE REZERVACIJE
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteReservation(int id)
@@ -154,14 +122,14 @@ namespace FrizerskiSalon_VSITE.Controllers
             return RedirectToAction(nameof(Reservations));
         }
 
-        // ✅ PRIKAZ KORISNIKA (UPRAVLJANJE KORISNICIMA)
+        // PRIKAZ KORISNIKA (UPRAVLJANJE KORISNICIMA)
         public async Task<IActionResult> Users()
         {
             var users = await _context.Users.ToListAsync();
             return View(users);
         }
 
-        // ✅ BRISANJE KORISNIKA
+        // BRISANJE KORISNIKA
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(string id)
@@ -179,7 +147,7 @@ namespace FrizerskiSalon_VSITE.Controllers
             return RedirectToAction(nameof(Users));
         }
 
-        // ✅ UREĐIVANJE KORISNIKA
+        // UREĐIVANJE KORISNIKA
         public async Task<IActionResult> EditUser(string id)
         {
             if (id == null) return NotFound();
