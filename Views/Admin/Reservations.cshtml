@@ -17,7 +17,7 @@
         {
             <tr>
                 <td>@(reservation.User != null ? reservation.User.Name : "Admin")</td>
-                <td>@reservation.ReservationDate.ToString("d.M.yyyy. HH:mm")</td>
+                <td>@reservation.ReservationDate.ToString("d.M.yyyy.") @reservation.ReservationTime.ToString(@"hh\:mm")</td>
                 <td>@reservation.Service?.Name</td>
                 <td>@reservation.Service?.Price €</td>
                 <td>

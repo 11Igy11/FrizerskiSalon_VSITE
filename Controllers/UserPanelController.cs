@@ -81,7 +81,7 @@ namespace FrizerskiSalon_VSITE.Controllers
 
             if (reservation.ReservationDate == DateTime.MinValue)
             {
-                ModelState.AddModelError("ReservationDate", "Morate odabrati datum.");
+                ModelState.AddModelError("ReservationDate", "Morate odabrati datum i vrijeme.");
             }
 
             var service = await _context.Services.FindAsync(reservation.ServiceId);
@@ -93,6 +93,32 @@ namespace FrizerskiSalon_VSITE.Controllers
             {
                 reservation.Service = service;
                 ModelState.Remove("Service");
+
+                // ✅ Parsiranje trajanja usluge iz `Description`
+                int duration = ExtractDurationFromDescription(service.Description);
+                if (duration == 0)
+                {
+                    ModelState.AddModelError("ServiceId", "Neispravan format trajanja usluge.");
+                }
+
+                // ✅ Postavljanje vremena završetka rezervacije
+                DateTime endTime = reservation.ReservationDate.AddMinutes(duration);
+
+                // ✅ Provjera preklapanja termina
+                var sveRezervacije = await _context.Reservations.Include(r => r.Service).ToListAsync();
+
+                bool terminZauzet = sveRezervacije.Any(r =>
+    r.ReservationDate.Date == reservation.ReservationDate.Date && // Provjera unutar istog dana
+    r.ReservationTime < reservation.ReservationTime + TimeSpan.FromMinutes(duration) &&
+    reservation.ReservationTime < r.ReservationTime + TimeSpan.FromMinutes(ExtractDurationFromDescription(r.Service.Description))
+);
+
+
+
+                if (terminZauzet)
+                {
+                    ModelState.AddModelError("ReservationDate", "Odabrani termin nije dostupan.");
+                }
             }
 
             if (!ModelState.IsValid)
@@ -106,6 +132,73 @@ namespace FrizerskiSalon_VSITE.Controllers
 
             TempData["SuccessMessage"] = "Rezervacija uspješno kreirana!";
             return RedirectToAction(nameof(Reservations));
+        }
+        private int ExtractDurationFromDescription(string description)
+        {
+            if (string.IsNullOrEmpty(description))
+                return 0;
+
+            var words = description.Split(' ');
+            foreach (var word in words)
+            {
+                if (int.TryParse(word, out int duration))
+                {
+                    return duration; // Prvi broj u stringu se uzima kao trajanje u minutama
+                }
+            }
+            return 0;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAvailableTimes(DateTime date, int serviceId)
+        {
+            // ✅ Dohvati sve rezervacije za odabrani datum
+            var rezervacijeZaDan = await _context.Reservations
+                .Where(r => r.ReservationDate.Date == date.Date)
+                .Include(r => r.Service)
+                .ToListAsync();
+
+            // ✅ Dohvati trajanje odabrane usluge
+            var service = await _context.Services.FindAsync(serviceId);
+            if (service == null)
+            {
+                return Json(new { error = "Odabrana usluga ne postoji." });
+            }
+
+            int duration = ExtractDurationFromDescription(service.Description);
+            if (duration == 0)
+            {
+                return Json(new { error = "Neispravan format trajanja usluge." });
+            }
+
+            // ✅ Generiraj sve moguće termine od 08:00 do 20:00 u koracima od 30 minuta
+            List<string> sviTermini = GenerateTimeSlots(8, 20, 30);
+
+            // ✅ Izračunaj zauzete termine
+            List<string> zauzetiTermini = rezervacijeZaDan
+    .Select(r => r.ReservationTime.ToString(@"hh\:mm"))
+    .ToList();
+
+
+            // ✅ Filtriraj samo slobodne termine
+            var slobodniTermini = sviTermini.Except(zauzetiTermini).ToList();
+
+            return Json(slobodniTermini);
+        }
+
+        // ✅ Funkcija za generiranje termina svakih X minuta između početnog i krajnjeg vremena
+        private List<string> GenerateTimeSlots(int startHour, int endHour, int interval)
+        {
+            List<string> timeSlots = new List<string>();
+            DateTime startTime = DateTime.Today.AddHours(startHour);
+
+            while (startTime.Hour < endHour)
+            {
+                timeSlots.Add(startTime.ToString("HH:mm"));
+                startTime = startTime.AddMinutes(interval);
+            }
+
+            return timeSlots;
         }
 
         public async Task<IActionResult> EditReservation(int id)

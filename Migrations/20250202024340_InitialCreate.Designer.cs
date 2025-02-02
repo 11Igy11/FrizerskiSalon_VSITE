@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FrizerskiSalon_VSITE.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250131112757_FixedApplicationDbContext")]
-    partial class FixedApplicationDbContext
+    [Migration("20250202024340_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,12 +40,11 @@ namespace FrizerskiSalon_VSITE.Migrations
                     b.Property<DateTime>("ReservationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<TimeSpan>("ReservationTime")
+                        .HasColumnType("time");
+
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");
-
-                    b.Property<string>("TimeSlot")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");

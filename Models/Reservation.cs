@@ -15,6 +15,10 @@ namespace FrizerskiSalon_VSITE.Models
         [DataType(DataType.Date, ErrorMessage = "Neispravan format datuma.")]
         public DateTime ReservationDate { get; set; }
 
+        [Required(ErrorMessage = "Vrijeme termina je obavezno.")]
+        [DataType(DataType.Time, ErrorMessage = "Neispravan format vremena.")]
+        public TimeSpan ReservationTime { get; set; } 
+
         public string? UserId { get; set; }
         public User? User { get; set; }
 

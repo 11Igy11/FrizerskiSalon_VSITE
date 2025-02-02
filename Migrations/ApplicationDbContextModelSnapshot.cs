@@ -37,6 +37,9 @@ namespace FrizerskiSalon_VSITE.Migrations
                     b.Property<DateTime>("ReservationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<TimeSpan>("ReservationTime")
+                        .HasColumnType("time");
+
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");
 
