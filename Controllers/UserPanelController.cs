@@ -108,10 +108,11 @@ namespace FrizerskiSalon_VSITE.Controllers
                 var sveRezervacije = await _context.Reservations.Include(r => r.Service).ToListAsync();
 
                 bool terminZauzet = sveRezervacije.Any(r =>
-    r.ReservationDate.Date == reservation.ReservationDate.Date && // Provjera unutar istog dana
-    r.ReservationTime < reservation.ReservationTime + TimeSpan.FromMinutes(duration) &&
-    reservation.ReservationTime < r.ReservationTime + TimeSpan.FromMinutes(ExtractDurationFromDescription(r.Service.Description))
+    r.ReservationDate.Date == reservation.ReservationDate.Date &&  // Mora biti isti datum
+    (r.ReservationTime < reservation.ReservationTime + TimeSpan.FromMinutes(duration) &&
+     reservation.ReservationTime < r.ReservationTime + TimeSpan.FromMinutes(ExtractDurationFromDescription(r.Service.Description)))
 );
+
 
 
 
@@ -229,7 +230,18 @@ namespace FrizerskiSalon_VSITE.Controllers
                 return View(reservation);
             }
 
-            reservation.UserId = userId;
+            var existingReservation = await _context.Reservations.FindAsync(id);
+            if (existingReservation == null)
+            {
+                return NotFound();
+            }
+
+            // ✅ Ažuriranje polja (ručno, bez Update metode)
+            existingReservation.CustomerName = reservation.CustomerName;
+            existingReservation.ReservationDate = reservation.ReservationDate;
+            existingReservation.ReservationTime = reservation.ReservationTime; // ✅ Dodaj vrijeme
+            existingReservation.ServiceId = reservation.ServiceId;
+            existingReservation.UserId = userId;
 
             if (!ModelState.IsValid)
             {
@@ -237,11 +249,11 @@ namespace FrizerskiSalon_VSITE.Controllers
                 return View("~/Views/User/EditReservation.cshtml", reservation);
             }
 
-            _context.Reservations.Update(reservation);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // ✅ Sprema promjene
 
             return RedirectToAction(nameof(Reservations));
         }
+
 
         public async Task<IActionResult> DeleteReservation(int id)
         {
