@@ -97,6 +97,16 @@ namespace FrizerskiSalon_VSITE.Controllers
             return View(model);
         }
 
+        // POST: Logout
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "User"); // Možeš preusmjeriti i na Home ili neku drugu stranicu
+        }
+
+
         // GET: User Dashboard
         public IActionResult Index()
         {
