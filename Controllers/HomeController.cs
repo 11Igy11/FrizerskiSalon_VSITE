@@ -1,4 +1,4 @@
-using FrizerskiSalon_VSITE.Models; 
+﻿using FrizerskiSalon_VSITE.Models; 
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -13,7 +13,7 @@ namespace FrizerskiSalon_VSITE.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        // GET metoda za po?etnu stranicu
+        // GET metoda za početnu stranicu
         public IActionResult Index()
         {
             _logger.LogInformation("Home page accessed.");
@@ -27,7 +27,7 @@ namespace FrizerskiSalon_VSITE.Controllers
             return View();
         }
 
-        // Metoda za prikaz gre�ke
+        // Metoda za prikaz greške
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

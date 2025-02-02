@@ -18,19 +18,19 @@ namespace FrizerskiSalon_VSITE.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // 🔥 Ispravno mapiranje Service → Reservation
+            //  Ispravno mapiranje Service → Reservation
             modelBuilder.Entity<Service>()
                 .Property(s => s.Price)
                 .HasColumnType("decimal(18,2)");
 
-            // 🔥 Ispravno mapiranje Reservation → User
+            //  Ispravno mapiranje Reservation → User
             modelBuilder.Entity<Reservation>()
                 .HasOne(r => r.User)
                 .WithMany()
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // 🔥 FINALNO UNIŠTAVANJE `ServiceId1`
+            //  FINALNO UNIŠTAVANJE `ServiceId1`
             modelBuilder.Entity<Reservation>()
                 .HasOne(r => r.Service)
                 .WithMany(s => s.Reservations)

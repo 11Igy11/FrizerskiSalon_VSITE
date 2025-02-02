@@ -94,17 +94,17 @@ namespace FrizerskiSalon_VSITE.Controllers
                 reservation.Service = service;
                 ModelState.Remove("Service");
 
-                // ✅ Parsiranje trajanja usluge iz `Description`
+                // Parsiranje trajanja usluge iz `Description`
                 int duration = ExtractDurationFromDescription(service.Description);
                 if (duration == 0)
                 {
                     ModelState.AddModelError("ServiceId", "Neispravan format trajanja usluge.");
                 }
 
-                // ✅ Postavljanje vremena završetka rezervacije
+                // Postavljanje vremena završetka rezervacije
                 DateTime endTime = reservation.ReservationDate.AddMinutes(duration);
 
-                // ✅ Provjera preklapanja termina
+                // Provjera preklapanja termina
                 var sveRezervacije = await _context.Reservations.Include(r => r.Service).ToListAsync();
 
                 bool terminZauzet = sveRezervacije.Any(r =>
@@ -153,13 +153,13 @@ namespace FrizerskiSalon_VSITE.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAvailableTimes(DateTime date, int serviceId)
         {
-            // ✅ Dohvati sve rezervacije za odabrani datum
+            // Dohvati sve rezervacije za odabrani datum
             var rezervacijeZaDan = await _context.Reservations
                 .Where(r => r.ReservationDate.Date == date.Date)
                 .Include(r => r.Service)
                 .ToListAsync();
 
-            // ✅ Dohvati trajanje odabrane usluge
+            // Dohvati trajanje odabrane usluge
             var service = await _context.Services.FindAsync(serviceId);
             if (service == null)
             {
@@ -172,22 +172,22 @@ namespace FrizerskiSalon_VSITE.Controllers
                 return Json(new { error = "Neispravan format trajanja usluge." });
             }
 
-            // ✅ Generiraj sve moguće termine od 08:00 do 20:00 u koracima od 30 minuta
+            // Generiraj sve moguće termine od 08:00 do 20:00 u koracima od 30 minuta
             List<string> sviTermini = GenerateTimeSlots(8, 20, 30);
 
-            // ✅ Izračunaj zauzete termine
+            // Izračunaj zauzete termine
             List<string> zauzetiTermini = rezervacijeZaDan
     .Select(r => r.ReservationTime.ToString(@"hh\:mm"))
     .ToList();
 
 
-            // ✅ Filtriraj samo slobodne termine
+            // Filtriraj samo slobodne termine
             var slobodniTermini = sviTermini.Except(zauzetiTermini).ToList();
 
             return Json(slobodniTermini);
         }
 
-        // ✅ Funkcija za generiranje termina svakih X minuta između početnog i krajnjeg vremena
+        // Funkcija za generiranje termina svakih X minuta između početnog i krajnjeg vremena
         private List<string> GenerateTimeSlots(int startHour, int endHour, int interval)
         {
             List<string> timeSlots = new List<string>();
@@ -236,10 +236,10 @@ namespace FrizerskiSalon_VSITE.Controllers
                 return NotFound();
             }
 
-            // ✅ Ažuriranje polja (ručno, bez Update metode)
+            // Ažuriranje polja (ručno, bez Update metode)
             existingReservation.CustomerName = reservation.CustomerName;
             existingReservation.ReservationDate = reservation.ReservationDate;
-            existingReservation.ReservationTime = reservation.ReservationTime; // ✅ Dodaj vrijeme
+            existingReservation.ReservationTime = reservation.ReservationTime; // Dodaj vrijeme
             existingReservation.ServiceId = reservation.ServiceId;
             existingReservation.UserId = userId;
 
@@ -249,7 +249,7 @@ namespace FrizerskiSalon_VSITE.Controllers
                 return View("~/Views/User/EditReservation.cshtml", reservation);
             }
 
-            await _context.SaveChangesAsync(); // ✅ Sprema promjene
+            await _context.SaveChangesAsync(); // Sprema promjene
 
             return RedirectToAction(nameof(Reservations));
         }
