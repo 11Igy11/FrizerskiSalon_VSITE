@@ -6,11 +6,10 @@
 <ul>
     <li><strong>Korisnik:</strong> @Model.CustomerName</li>
     <li><strong>Datum:</strong> @Model.ReservationDate.ToString("dd.MM.yyyy")</li>
-    <li><strong>Vrijeme:</strong> @Model.TimeSlot</li>
     <li><strong>Usluga:</strong> @Model.Service?.Name ?? "Nepoznato"</li>
 </ul>
 
-<form asp-action="DeleteReservationConfirmed" method="post">
+<form asp-action="DeleteReservation" method="post">
     <input type="hidden" asp-for="Id" />
     <button type="submit" class="btn btn-danger">Obriši</button>
     <a asp-action="Reservations" class="btn btn-secondary">Odustani</a>

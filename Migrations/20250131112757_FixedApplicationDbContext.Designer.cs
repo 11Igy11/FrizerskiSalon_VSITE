@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FrizerskiSalon_VSITE.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250128134250_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250131112757_FixedApplicationDbContext")]
+    partial class FixedApplicationDbContext
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,9 +37,6 @@ namespace FrizerskiSalon_VSITE.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("ReservationDate")
                         .HasColumnType("datetime2");
 
@@ -51,7 +48,6 @@ namespace FrizerskiSalon_VSITE.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -292,7 +288,7 @@ namespace FrizerskiSalon_VSITE.Migrations
             modelBuilder.Entity("FrizerskiSalon_VSITE.Models.Reservation", b =>
                 {
                     b.HasOne("FrizerskiSalon_VSITE.Models.Service", "Service")
-                        .WithMany()
+                        .WithMany("Reservations")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -300,8 +296,7 @@ namespace FrizerskiSalon_VSITE.Migrations
                     b.HasOne("FrizerskiSalon_VSITE.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Service");
 
@@ -357,6 +352,11 @@ namespace FrizerskiSalon_VSITE.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FrizerskiSalon_VSITE.Models.Service", b =>
+                {
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

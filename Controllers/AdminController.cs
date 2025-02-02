@@ -1,36 +1,40 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FrizerskiSalon_VSITE.Data;
 using FrizerskiSalon_VSITE.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace FrizerskiSalon_VSITE.Controllers
 {
-    [Authorize(Roles = "Admin")] // Ovaj atribut osigurava da samo administrator ima pristup
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public AdminController(ApplicationDbContext context)
+        public AdminController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        // GET: Admin panel početna stranica (prikaz svih usluga)
+        // ✅ PRIKAZ ADMIN PANELA (USLUGE + OPCIJE)
         public IActionResult Index()
         {
             var services = _context.Services.ToList();
             return View(services);
         }
 
-        // GET: Dodavanje nove usluge
+        // ✅ DODAVANJE USLUGE
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Dodavanje nove usluge
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Service service)
@@ -44,173 +48,171 @@ namespace FrizerskiSalon_VSITE.Controllers
             return View(service);
         }
 
-        // GET: Uređivanje usluge
+        // ✅ UREĐIVANJE USLUGE
         public async Task<IActionResult> Edit(int id)
         {
             var service = await _context.Services.FindAsync(id);
-            if (service == null)
-            {
-                return NotFound(); // Vraća status 404 ako usluga nije pronađena
-            }
+            if (service == null) return NotFound();
             return View(service);
         }
 
-        // POST: Uređivanje usluge
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Service service)
+        public async Task<IActionResult> Edit(int id, Service service)
         {
+            if (id != service.Id) return NotFound();
+
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Services.Update(service);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Services.Any(s => s.Id == service.Id))
-                    {
-                        return NotFound(); // Vraća status 404 ako usluga više ne postoji
-                    }
-                    else
-                    {
-                        throw; // Ako je greška drugačija, baci iznimku
-                    }
-                }
+                _context.Update(service);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(service);
         }
 
-        // GET: Potvrda brisanja usluge
-        public async Task<IActionResult> Delete(int id)
-        {
-            var service = await _context.Services.FindAsync(id);
-            if (service == null)
-            {
-                return NotFound();
-            }
-            return View(service);
-        }
-
-        // POST: Brisanje usluge
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var service = await _context.Services.FindAsync(id);
-            if (service != null)
-            {
-                _context.Services.Remove(service);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction(nameof(Index));
-        }
-        // GET: Dodavanje rezervacije
-        public IActionResult CreateReservation()
-        {
-            ViewBag.Services = new SelectList(_context.Services, "Id", "Name"); // Popunjavamo izbornik s uslugama
-            return View();
-        }
-
-        // POST: Dodavanje rezervacije
+        // ✅ BRISANJE USLUGE
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateReservation(Reservation reservation)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (ModelState.IsValid)
+            var service = await _context.Services
+                .Include(s => s.Reservations)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (service == null) return NotFound();
+
+            // Provjera postoji li rezervacija koja koristi ovu uslugu
+            bool imaRezervacija = await _context.Reservations.AnyAsync(r => r.ServiceId == id);
+            if (imaRezervacija)
             {
-                _context.Reservations.Add(reservation);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Reservations)); // Vraća se na pregled rezervacija
+                TempData["ErrorMessage"] = "Usluga se koristi u rezervacijama i ne može se obrisati.";
+                return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.Services = new SelectList(_context.Services, "Id", "Name"); // Ponovno punimo izbornik ako validacija nije uspjela
-            return View(reservation);
+            _context.Services.Remove(service);
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Usluga je uspješno obrisana.";
+            return RedirectToAction(nameof(Index));
         }
 
 
-        // GET: Prikaz svih rezervacija
+        // ✅ PRIKAZ SVIH REZERVACIJA
         public async Task<IActionResult> Reservations()
         {
             var reservations = await _context.Reservations
-                .Include(r => r.User)    // Učitava povezane korisnike
-                .Include(r => r.Service) // Učitava povezane usluge
+                .Include(r => r.User)
+                .Include(r => r.Service)
                 .ToListAsync();
             return View(reservations);
         }
 
-        // GET: Uređivanje rezervacije
+        // ✅ UREĐIVANJE REZERVACIJE
         public async Task<IActionResult> EditReservation(int id)
         {
-            var reservation = await _context.Reservations
-                .Include(r => r.User) // Uključuje korisnika
-                .Include(r => r.Service) // Uključuje uslugu
-                .FirstOrDefaultAsync(r => r.Id == id);
+            var reservation = await _context.Reservations.FindAsync(id);
+            if (reservation == null) return NotFound();
 
-            if (reservation == null)
-            {
-                return NotFound();
-            }
+            ViewBag.Services = new SelectList(_context.Services, "Id", "Name", reservation.ServiceId);
+            ViewBag.Users = new SelectList(_context.Users, "Id", "Name", reservation.UserId);
             return View(reservation);
         }
 
-        // POST: Uređivanje rezervacije
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditReservation(Reservation reservation)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Reservations.Update(reservation);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Reservations.Any(r => r.Id == reservation.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Reservations));
+                ViewBag.Services = new SelectList(_context.Services, "Id", "Name", reservation.ServiceId);
+                ViewBag.Users = new SelectList(_context.Users, "Id", "Name", reservation.UserId);
+                return View(reservation);
             }
-            return View(reservation);
+
+            var existingReservation = await _context.Reservations.FindAsync(reservation.Id);
+            if (existingReservation == null) return NotFound();
+
+            existingReservation.CustomerName = reservation.CustomerName;
+            existingReservation.ReservationDate = reservation.ReservationDate;
+            existingReservation.ServiceId = reservation.ServiceId;
+            existingReservation.UserId = string.IsNullOrEmpty(reservation.UserId) ? null : reservation.UserId;
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Reservations));
         }
 
-        // GET: Potvrda brisanja rezervacije
+        // ✅ BRISANJE REZERVACIJE
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteReservation(int id)
         {
-            var reservation = await _context.Reservations
-                .Include(r => r.User)
-                .Include(r => r.Service)
-                .FirstOrDefaultAsync(r => r.Id == id);
+            var reservation = await _context.Reservations.FindAsync(id);
+            if (reservation == null) return NotFound();
 
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-            return View(reservation);
+            _context.Reservations.Remove(reservation);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Reservations));
         }
 
-        // POST: Brisanje rezervacije
-        [HttpPost, ActionName("DeleteReservation")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteReservationConfirmed(int id)
+        // ✅ PRIKAZ KORISNIKA (UPRAVLJANJE KORISNICIMA)
+        public async Task<IActionResult> Users()
         {
-            var reservation = await _context.Reservations.FindAsync(id);
-            if (reservation != null)
+            var users = await _context.Users.ToListAsync();
+            return View(users);
+        }
+
+        // ✅ BRISANJE KORISNIKA
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return NotFound();
+
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
             {
-                _context.Reservations.Remove(reservation);
-                await _context.SaveChangesAsync();
+                ModelState.AddModelError("", "Brisanje korisnika nije uspjelo.");
+                return RedirectToAction(nameof(Users));
             }
-            return RedirectToAction(nameof(Reservations));
+
+            return RedirectToAction(nameof(Users));
+        }
+
+        // ✅ UREĐIVANJE KORISNIKA
+        public async Task<IActionResult> EditUser(string id)
+        {
+            if (id == null) return NotFound();
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return NotFound();
+
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(User user)
+        {
+            var existingUser = await _userManager.FindByIdAsync(user.Id);
+            if (existingUser == null) return NotFound();
+
+            existingUser.Name = user.Name;
+            existingUser.Email = user.Email;
+            existingUser.PhoneNumber = user.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(existingUser);
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(Users));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            return View(user);
         }
     }
 }

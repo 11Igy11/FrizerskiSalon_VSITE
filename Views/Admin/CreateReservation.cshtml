@@ -1,40 +1,34 @@
 ﻿@model FrizerskiSalon_VSITE.Models.Reservation
 
+<h2>Kreiraj novu rezervaciju</h2>
+
 <form asp-action="CreateReservation" method="post">
     <div class="form-group">
-        <label asp-for="CustomerName"></label>
-        <input asp-for="CustomerName" class="form-control" />
-        <span asp-validation-for="CustomerName" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ReservationDate"></label>
-        <input asp-for="ReservationDate" type="date" class="form-control" />
-        <span asp-validation-for="ReservationDate" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="TimeSlot"></label>
-        <input asp-for="TimeSlot" class="form-control" />
-        <span asp-validation-for="TimeSlot" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ServiceId"></label>
-        <select asp-for="ServiceId" asp-items="ViewBag.Services" class="form-control">
-            <option value="">Odaberi uslugu</option>
+        <label>Ime korisnika</label>
+        <select asp-for="UserId" asp-items="ViewBag.Users" class="form-control">
+            <option value="">Odaberi korisnika (ili ostavi prazno za admina)</option>
         </select>
+        <span asp-validation-for="UserId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Usluga</label>
+        <select asp-for="ServiceId" asp-items="ViewBag.Services" class="form-control">
+            <option value="">-- Odaberi uslugu --</option>
+        </select>
+
         <span asp-validation-for="ServiceId" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="UserId"></label>
-        <input asp-for="UserId" class="form-control" />
-        <span asp-validation-for="UserId" class="text-danger"></span>
+        <label>Datum</label>
+        <input asp-for="ReservationDate" type="date" class="form-control" required value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="ReservationDate" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Rezerviraj termin</button>
+        <button type="submit" class="btn btn-primary">Rezerviraj</button>
 </form>
 
 
-<a asp-action="Reservations" class="btn btn-secondary">Povratak</a>
+
+<a asp-action="Reservations" class="btn btn-secondary mt-3">Povratak na rezervacije</a>

@@ -1,6 +1,18 @@
-﻿<h1>Dobrodošli u Admin Panel</h1>
+﻿@model IEnumerable<FrizerskiSalon_VSITE.Models.Service>
+
+<h1>Dobrodošli u Admin Panel</h1>
 
 <h2>Usluge</h2>
+@if (TempData["ErrorMessage"] != null)
+{
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
 <a asp-action="Create" class="btn btn-primary">Dodaj novu uslugu</a>
 <table class="table">
     <thead>
@@ -20,7 +32,9 @@
                 <td>@service.Description</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@service.Id" class="btn btn-warning">Uredi</a>
-                    <a asp-action="Delete" asp-route-id="@service.Id" class="btn btn-danger">Obriši</a>
+                        <form asp-action="Delete" asp-route-id="@service.Id" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-danger">🗑️ Obriši</button>
+    </form>
                 </td>
             </tr>
         }
@@ -28,5 +42,5 @@
 </table>
 
 <h2>Rezervacije</h2>
-<a asp-action="CreateReservation" class="btn btn-primary">Dodaj novu rezervaciju</a>
 <a asp-action="Reservations" class="btn btn-secondary">Pogledaj sve rezervacije</a>
+<a asp-action="Users" class="btn btn-secondary">Upravljanje korisnicima</a>

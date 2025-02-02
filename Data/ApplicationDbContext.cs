@@ -18,24 +18,24 @@ namespace FrizerskiSalon_VSITE.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Konfiguracija za decimalnu preciznost
+            // 🔥 Ispravno mapiranje Service → Reservation
             modelBuilder.Entity<Service>()
                 .Property(s => s.Price)
                 .HasColumnType("decimal(18,2)");
 
-            // Konfiguracija za vezu između rezervacija i korisnika
+            // 🔥 Ispravno mapiranje Reservation → User
             modelBuilder.Entity<Reservation>()
                 .HasOne(r => r.User)
                 .WithMany()
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Konfiguracija za vezu između rezervacija i usluga
+            // 🔥 FINALNO UNIŠTAVANJE `ServiceId1`
             modelBuilder.Entity<Reservation>()
                 .HasOne(r => r.Service)
-                .WithMany()
+                .WithMany(s => s.Reservations)
                 .HasForeignKey(r => r.ServiceId)
-                .OnDelete(DeleteBehavior.Restrict); // Ovdje možete odabrati ponašanje brisanja
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

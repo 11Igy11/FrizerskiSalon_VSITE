@@ -4,26 +4,34 @@
 
 <form asp-action="EditReservation" method="post">
     <input type="hidden" asp-for="Id" />
+
     <div class="form-group">
         <label for="CustomerName">Ime korisnika</label>
         <input asp-for="CustomerName" class="form-control" />
         <span asp-validation-for="CustomerName" class="text-danger"></span>
     </div>
+
     <div class="form-group">
         <label for="ReservationDate">Datum</label>
         <input asp-for="ReservationDate" type="date" class="form-control" />
         <span asp-validation-for="ReservationDate" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label for="TimeSlot">Vrijeme</label>
-        <input asp-for="TimeSlot" class="form-control" />
-        <span asp-validation-for="TimeSlot" class="text-danger"></span>
-    </div>
+
     <div class="form-group">
         <label for="ServiceId">Usluga</label>
         <select asp-for="ServiceId" asp-items="ViewBag.Services" class="form-control"></select>
         <span asp-validation-for="ServiceId" class="text-danger"></span>
     </div>
+
+    <!-- NOVO: Dodano polje za korisnika -->
+    <div class="form-group">
+        <label for="UserId">Korisnik</label>
+        <select asp-for="UserId" asp-items="ViewBag.Users" class="form-control">
+            <option value="">Nema korisnika (Admin rezervacija)</option>
+        </select>
+        <span asp-validation-for="UserId" class="text-danger"></span>
+    </div>
+
     <button type="submit" class="btn btn-primary">Spremi promjene</button>
 </form>
 

@@ -13,29 +13,30 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Datum</th>
-                <th>Vrijeme</th>
-                <th>Usluga</th>
-                <th>Trajanje</th>
-                <th>Cijena</th>
-                <th>Akcije</th>
+                <th class="text-center">Datum</th>
+                <th class="text-center">Vrijeme</th>
+                <th class="text-center">Usluga</th>
+                <th class="text-center">Trajanje</th>
+                <th class="text-center">Cijena</th>
+                <th class="text-center">Akcije</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var reservation in Model)
             {
                 <tr>
-                    <td>@reservation.ReservationDate.ToString("dd.MM.yyyy")</td>
-                    <td>@reservation.TimeSlot</td>
-                    <td>@reservation.Service.Name</td>
-                    <td>@reservation.Service.Description</td>
-                    <td>@reservation.Service.Price.ToString("0.00") €</td>
-                    <td>
-                        <a class="btn btn-warning" asp-action="EditReservation" asp-route-id="@reservation.Id">Uredi</a>
-                        <a class="btn btn-danger" asp-action="DeleteReservation" asp-route-id="@reservation.Id">Otkaži</a>
+                    <td class="text-center">@reservation.ReservationDate.ToString("dd.MM.yyyy")</td>
+                    <td class="text-center">@reservation.ReservationDate.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td class="text-center">@reservation.Service?.Name</td>  <!-- Ovdje treba biti naziv usluge -->
+                    <td class="text-center">@reservation.Service?.Description</td>
+                    <td class="text-center">@reservation.Service?.Price.ToString("0.00 €")</td>
+                    <td class="text-center">
+                        <a asp-action="EditReservation" asp-route-id="@reservation.Id" class="btn btn-warning">Uredi</a>
+                        <a asp-action="DeleteReservation" asp-route-id="@reservation.Id" class="btn btn-danger">Otkaži</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+
 }

@@ -15,5 +15,7 @@ namespace FrizerskiSalon_VSITE.Models
 
         [Required(ErrorMessage = "Opis usluge je obavezan.")]
         public string Description { get; set; }  // Dodano polje
+
+        public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }
