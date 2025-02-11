@@ -242,14 +242,23 @@ namespace FrizerskiSalon_VSITE.Controllers
             existingReservation.ReservationTime = reservation.ReservationTime; // Dodaj vrijeme
             existingReservation.ServiceId = reservation.ServiceId;
             existingReservation.UserId = userId;
+            reservation.Service = await _context.Services.FindAsync(reservation.ServiceId);
+            ModelState.Remove("Service");
+
 
             if (!ModelState.IsValid)
             {
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
                 ViewBag.Services = new SelectList(_context.Services, "Id", "Name", reservation.ServiceId);
                 return View("~/Views/User/EditReservation.cshtml", reservation);
             }
 
-            await _context.SaveChangesAsync(); // Sprema promjene
+
+            _context.Update(existingReservation);
+            await _context.SaveChangesAsync();           // Sprema promjene
 
             return RedirectToAction(nameof(Reservations));
         }
