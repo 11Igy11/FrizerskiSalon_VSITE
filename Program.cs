@@ -13,6 +13,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/User/Login"; // Postavlja URL za login ako korisnik nije prijavljen
+    options.AccessDeniedPath = "/User/AccessDenied"; // Ako korisnik nema pravo pristupa
+    options.SlidingExpiration = true; // Produžuje sesiju ako je korisnik aktivan
+});
+
 
 builder.Services.AddAuthorization();
 
