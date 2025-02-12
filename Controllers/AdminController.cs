@@ -103,11 +103,13 @@ namespace FrizerskiSalon_VSITE.Controllers
             var reservations = await _context.Reservations
                 .Include(r => r.User)
                 .Include(r => r.Service)
+                .OrderBy(r => r.ReservationDate) // Prvo sortiramo po datumu
+                .ThenBy(r => r.ReservationTime)  // Zatim po vremenu
                 .ToListAsync();
+
             return View(reservations);
         }
 
-        
 
         // BRISANJE REZERVACIJE
         [HttpPost]

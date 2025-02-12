@@ -30,9 +30,12 @@ namespace FrizerskiSalon_VSITE.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var reservations = await _context.Reservations
-                .Where(r => r.UserId == userId)
-                .Include(r => r.Service)
-                .ToListAsync();
+    .Where(r => r.UserId == userId)
+    .Include(r => r.Service)
+    .OrderBy(r => r.ReservationDate)
+    .ThenBy(r => r.ReservationTime)
+    .ToListAsync();
+
 
             return View("~/Views/User/Reservations.cshtml", reservations ?? new List<Reservation>());
         }
@@ -83,6 +86,17 @@ namespace FrizerskiSalon_VSITE.Controllers
             {
                 ModelState.AddModelError("ReservationDate", "Morate odabrati datum i vrijeme.");
             }
+            // Provjera da li je datum i vrijeme u prošlosti
+            DateTime now = DateTime.Now;
+            DateTime selectedDateTime = reservation.ReservationDate.Date + reservation.ReservationTime;
+
+            if (selectedDateTime < now)
+            {
+                ModelState.AddModelError("ReservationDate", "Ne možete rezervirati termin u prošlosti.");
+                ViewBag.Services = new SelectList(_context.Services, "Id", "Name", reservation.ServiceId);
+                return View("~/Views/User/CreateReservation.cshtml", reservation);
+            }
+
 
             var service = await _context.Services.FindAsync(reservation.ServiceId);
             if (service == null)
@@ -227,7 +241,7 @@ namespace FrizerskiSalon_VSITE.Controllers
             {
                 ModelState.AddModelError("", "Došlo je do greške pri identifikaciji korisnika.");
                 ViewBag.Services = new SelectList(_context.Services, "Id", "Name", reservation.ServiceId);
-                return View(reservation);
+                return View("~/Views/User/EditReservation.cshtml", reservation);
             }
 
             var existingReservation = await _context.Reservations.FindAsync(id);
@@ -236,32 +250,68 @@ namespace FrizerskiSalon_VSITE.Controllers
                 return NotFound();
             }
 
-            // Ažuriranje polja (ručno, bez Update metode)
-            existingReservation.CustomerName = reservation.CustomerName;
-            existingReservation.ReservationDate = reservation.ReservationDate;
-            existingReservation.ReservationTime = reservation.ReservationTime; // Dodaj vrijeme
-            existingReservation.ServiceId = reservation.ServiceId;
-            existingReservation.UserId = userId;
-            reservation.Service = await _context.Services.FindAsync(reservation.ServiceId);
-            ModelState.Remove("Service");
-
-
-            if (!ModelState.IsValid)
+            var service = await _context.Services.FindAsync(reservation.ServiceId);
+            if (service == null)
             {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
+                ModelState.AddModelError("ServiceId", "Odabrana usluga ne postoji.");
                 ViewBag.Services = new SelectList(_context.Services, "Id", "Name", reservation.ServiceId);
                 return View("~/Views/User/EditReservation.cshtml", reservation);
             }
 
+            // ✅ Spriječiti rezervaciju u prošlosti
+            DateTime now = DateTime.Now;
+            DateTime selectedDateTime = reservation.ReservationDate.Date + reservation.ReservationTime;
+
+            if (selectedDateTime < now)
+            {
+                ModelState.AddModelError("ReservationDate", "Ne možete rezervirati termin u prošlosti.");
+                ViewBag.Services = new SelectList(_context.Services, "Id", "Name", reservation.ServiceId);
+                return View("~/Views/User/EditReservation.cshtml", reservation);
+            }
+
+            // ✅ Spriječiti preklapanje termina
+            int duration = ExtractDurationFromDescription(service.Description);
+            TimeSpan newEndTime = reservation.ReservationTime + TimeSpan.FromMinutes(duration);
+
+            var conflictingReservations = await _context.Reservations
+                .Where(r => r.ReservationDate.Date == reservation.ReservationDate.Date && r.Id != reservation.Id)
+                .Include(r => r.Service)
+                .ToListAsync();
+
+            bool terminZauzet = conflictingReservations.Any(r =>
+                r.ReservationTime < newEndTime &&
+                reservation.ReservationTime < r.ReservationTime + TimeSpan.FromMinutes(ExtractDurationFromDescription(r.Service.Description))
+            );
+
+            if (terminZauzet)
+            {
+                ModelState.AddModelError("ReservationDate", "Odabrani termin nije dostupan.");
+                ViewBag.Services = new SelectList(_context.Services, "Id", "Name", reservation.ServiceId);
+                return View("~/Views/User/EditReservation.cshtml", reservation);
+            }
+
+            // ✅ Ažuriranje rezervacije
+            existingReservation.CustomerName = reservation.CustomerName;
+            existingReservation.ReservationDate = reservation.ReservationDate;
+            existingReservation.ReservationTime = reservation.ReservationTime;
+            existingReservation.ServiceId = reservation.ServiceId;
+            existingReservation.UserId = userId;
+            existingReservation.Service = service;
+            ModelState.Remove("Service");
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Services = new SelectList(_context.Services, "Id", "Name", reservation.ServiceId);
+                return View("~/Views/User/EditReservation.cshtml", reservation);
+            }
 
             _context.Update(existingReservation);
-            await _context.SaveChangesAsync();           // Sprema promjene
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Reservations));
         }
+
+
 
 
         public async Task<IActionResult> DeleteReservation(int id)
