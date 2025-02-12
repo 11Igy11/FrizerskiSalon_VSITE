@@ -14,3 +14,58 @@ body {
     .btn:hover {
         background-color: #0056b3;
     }
+/* 🔹 Poboljšani font i bolja čitljivost */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* 🔹 Poboljšani gumbi (malo svjetliji i s efektom) */
+.btn {
+    padding: 10px 20px;
+    background-color: #6C63FF;
+    color: white;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+    .btn:hover {
+        background-color: #5548E1;
+        box-shadow: 0px 0px 10px rgba(108, 99, 255, 0.8);
+    }
+
+/* 🔹 Kartice umjesto tablica */
+.card {
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+/* 🔹 Animacija fade-in pri učitavanju stranice */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease-in-out;
+}
+
+    .fade-in.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+/* 🔹 Hover efekt za kartice */
+.card {
+    transition: all 0.3s ease-in-out;
+}
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    }
+/* 🔹 Glow efekt na hover gumba */
+.btn {
+    transition: all 0.3s ease-in-out;
+}
+
+    .btn:hover {
+        box-shadow: 0px 0px 10px rgba(108, 99, 255, 0.6);
+    }

@@ -14,7 +14,7 @@ else
         <thead>
             <tr>
                 <th>Datum</th>
-                <th>Vrijeme</th> 
+                <th>Vrijeme</th>
                 <th>Usluga</th>
                 <th>Trajanje</th>
                 <th>Cijena</th>
@@ -27,7 +27,7 @@ else
                 <tr>
                     <td>@reservation.ReservationDate.ToString("dd.MM.yyyy")</td> <!-- Samo datum -->
                     <td>@reservation.ReservationTime.ToString(@"hh\:mm")</td> <!-- Samo vrijeme -->
-                    <td>@reservation.Service.Name</td>
+                    <td>@(reservation.Service?.Name ?? "Nepoznata usluga")</td>
                     <td>@reservation.Service.Description</td>
                     <td>@($"{reservation.Service.Price:0.00} €")</td>
                     <td>
