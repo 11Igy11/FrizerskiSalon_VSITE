@@ -311,10 +311,7 @@ namespace FrizerskiSalon_VSITE.Controllers
             return RedirectToAction(nameof(Reservations));
         }
 
-
-
-
-        public async Task<IActionResult> DeleteReservation(int id)
+                public async Task<IActionResult> DeleteReservation(int id)
         {
             var reservation = await _context.Reservations.Include(r => r.Service).FirstOrDefaultAsync(r => r.Id == id);
             if (reservation == null)

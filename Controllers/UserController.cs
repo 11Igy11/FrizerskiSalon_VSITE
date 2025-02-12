@@ -103,7 +103,7 @@ namespace FrizerskiSalon_VSITE.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "User"); // Možeš preusmjeriti i na Home ili neku drugu stranicu
+            return RedirectToAction("Login", "User"); // preusmjeri na login
         }
 
 

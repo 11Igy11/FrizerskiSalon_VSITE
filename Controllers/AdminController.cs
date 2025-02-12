@@ -97,14 +97,14 @@ namespace FrizerskiSalon_VSITE.Controllers
         }
 
 
-        // PRIKAZ SVIH REZERVACIJA
+        // PRIKAZ SVIH REZERVACIJA i sort
         public async Task<IActionResult> Reservations()
         {
             var reservations = await _context.Reservations
                 .Include(r => r.User)
                 .Include(r => r.Service)
-                .OrderBy(r => r.ReservationDate) // Prvo sortiramo po datumu
-                .ThenBy(r => r.ReservationTime)  // Zatim po vremenu
+                .OrderBy(r => r.ReservationDate)
+                .ThenBy(r => r.ReservationTime)
                 .ToListAsync();
 
             return View(reservations);
