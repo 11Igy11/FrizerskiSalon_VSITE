@@ -5,10 +5,6 @@
       "PackagePath": "staticwebassets\\FrizerskiSalon_VSITE.bundle.scp.css"
     },
     {
-      "Id": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\wwwroot\\css\\custom.css",
-      "PackagePath": "staticwebassets\\css\\custom.css"
-    },
-    {
       "Id": "C:\\Users\\Korisnik\\source\\repos\\FrizerskiSalon_VSITE\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },

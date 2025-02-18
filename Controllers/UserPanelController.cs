@@ -127,9 +127,6 @@ namespace FrizerskiSalon_VSITE.Controllers
      reservation.ReservationTime < r.ReservationTime + TimeSpan.FromMinutes(ExtractDurationFromDescription(r.Service.Description)))
 );
 
-
-
-
                 if (terminZauzet)
                 {
                     ModelState.AddModelError("ReservationDate", "Odabrani termin nije dostupan.");
@@ -145,7 +142,7 @@ namespace FrizerskiSalon_VSITE.Controllers
             _context.Reservations.Add(reservation);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Rezervacija uspješno kreirana!";
+            TempData["SuccessMessage"] = "Nova rezervacija je kreirana!";
             return RedirectToAction(nameof(Reservations));
         }
         private int ExtractDurationFromDescription(string description)
@@ -158,7 +155,7 @@ namespace FrizerskiSalon_VSITE.Controllers
             {
                 if (int.TryParse(word, out int duration))
                 {
-                    return duration; // Prvi broj u stringu se uzima kao trajanje u minutama
+                    return duration; //  broj u stringu se uzima kao trajanje u minutama
                 }
             }
             return 0;
