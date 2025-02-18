@@ -35,3 +35,7 @@ Klikom na IIS Express u Visual Studiju, ili Pokreni iz terminala:
 
 >> dotnet run
 
+4. **Admin password**
+
+>> user: admin@frizerski-salon.hr
+>> password: Admin123!
