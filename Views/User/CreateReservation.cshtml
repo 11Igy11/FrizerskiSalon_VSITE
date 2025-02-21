@@ -1,0 +1,92 @@
+﻿@model FrizerskiSalon_VSITE.Models.Reservation
+
+<h2>Kreiraj novu rezervaciju</h2>
+
+<form asp-controller="UserPanel" asp-action="CreateReservation" method="post">
+    <div class="form-group">
+        <label for="CustomerName">Ime i prezime</label>
+        <input asp-for="CustomerName" type="text" class="form-control" required />
+        <span asp-validation-for="CustomerName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ServiceId">Odaberi uslugu</label>
+        <select asp-for="ServiceId" class="form-control" asp-items="ViewBag.Services">
+            <option value="">Odaberite uslugu</option>
+        </select>
+        <span asp-validation-for="ServiceId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ReservationDate">Datum</label>
+        
+
+        <label>Datum</label>
+        <input asp-for="ReservationDate" type="date" class="form-control" required
+               id="reservationDate" min="@DateTime.Now.ToString("yyyy-MM-dd")"
+               value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                let today = new Date().toISOString().split("T")[0];
+                document.getElementById("reservationDate").setAttribute("min", today);
+            });
+        </script>
+
+
+
+        <label>Vrijeme</label>
+        <select asp-for="ReservationTime" class="form-control" id="timeSlot">
+            <option value="">Odaberite termin</option>
+        </select>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                let today = new Date().toISOString().split("T")[0];
+                document.getElementById("reservationDate").setAttribute("min", today);
+                document.getElementById("reservationDate").value = today;
+
+                function fetchAvailableTimes() {
+                    let selectedDate = document.getElementById("reservationDate").value;
+                    let serviceId = document.getElementById("ServiceId").value;
+
+                    if (!selectedDate || !serviceId) return;
+
+                    fetch(`/UserPanel/GetAvailableTimes?date=${selectedDate}&serviceId=${serviceId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            let dropdown = document.getElementById("timeSlot");
+                            dropdown.innerHTML = ""; // Očisti dropdown prije dodavanja novih opcija
+
+                            if (data.error) {
+                                dropdown.innerHTML = `<option value="">${data.error}</option>`;
+                                return;
+                            }
+
+                            data.forEach(time => {
+                                let option = document.createElement("option");
+                                option.value = time;
+                                option.textContent = time;
+                                dropdown.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error("Greška pri dohvaćanju termina:", error));
+                }
+
+                document.getElementById("reservationDate").addEventListener("change", fetchAvailableTimes);
+                document.getElementById("ServiceId").addEventListener("change", fetchAvailableTimes);
+            });
+        </script>
+
+
+
+        <span asp-validation-for="ReservationDate" class="text-danger"></span>
+    </div>
+
+    
+    <button type="submit" class="btn btn-primary">Rezerviraj</button>
+</form>
+
+<a asp-action="Reservations" class="btn btn-secondary mt-3">Povratak na rezervacije</a>

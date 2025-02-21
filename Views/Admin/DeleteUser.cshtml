@@ -1,0 +1,16 @@
+﻿@model FrizerskiSalon_VSITE.Models.User
+
+<h2>Obriši korisnika</h2>
+
+<p>Jeste li sigurni da želite obrisati ovog korisnika?</p>
+<ul>
+    <li><strong>Ime:</strong> @Model.Name</li>
+    <li><strong>Email:</strong> @Model.Email</li>
+    <li><strong>Telefon:</strong> @Model.PhoneNumber</li>
+</ul>
+
+<form asp-action="DeleteUserConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Obriši</button>
+    <a asp-action="Users" class="btn btn-secondary">Odustani</a>
+</form>

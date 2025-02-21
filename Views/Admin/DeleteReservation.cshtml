@@ -1,0 +1,16 @@
+﻿@model FrizerskiSalon_VSITE.Models.Reservation
+
+<h2>Obriši rezervaciju</h2>
+
+<p>Jeste li sigurni da želite obrisati ovu rezervaciju?</p>
+<ul>
+    <li><strong>Korisnik:</strong> @Model.CustomerName</li>
+    <li><strong>Datum:</strong> @Model.ReservationDate.ToString("dd.MM.yyyy")</li>
+    <li><strong>Usluga:</strong> @Model.Service?.Name ?? "Nepoznato"</li>
+</ul>
+
+<form asp-action="DeleteReservation" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Obriši</button>
+    <a asp-action="Reservations" class="btn btn-secondary">Odustani</a>
+</form>

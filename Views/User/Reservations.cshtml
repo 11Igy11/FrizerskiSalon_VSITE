@@ -1,0 +1,43 @@
+﻿@model List<FrizerskiSalon_VSITE.Models.Reservation>
+
+<h2>Moje rezervacije</h2>
+
+<a class="btn btn-success mb-3" asp-action="CreateReservation">+ Nova rezervacija</a>
+
+@if (Model != null && Model.Count == 0)
+{
+    <p>Nema zakazanih termina.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Vrijeme</th>
+                <th>Usluga</th>
+                <th>Trajanje</th>
+                <th>Cijena</th>
+                <th>Akcije</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reservation in Model)
+            {
+                <tr>
+                    <td>@reservation.ReservationDate.ToString("dd.MM.yyyy")</td> <!-- Samo datum -->
+                    <td>@reservation.ReservationTime.ToString(@"hh\:mm")</td> <!-- Samo vrijeme -->
+                    <td>@(reservation.Service?.Name ?? "Nepoznata usluga")</td>
+                    <td>@reservation.Service.Description</td>
+                    <td>@($"{reservation.Service.Price:0.00} €")</td>
+                    <td>
+                        <a asp-action="EditReservation" asp-route-id="@reservation.Id" class="btn btn-warning">Uredi</a>
+                        <a asp-action="DeleteReservation" asp-route-id="@reservation.Id" class="btn btn-danger">Otkaži</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+}

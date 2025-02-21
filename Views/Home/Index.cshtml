@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Frizerski Salon - Početna stranica";
+}
+
+<!-- Tekst dobrodošlice na vrhu -->
+<div class="text-center">
+    <h1 class="display-4">Dobrodošli u frizerski salon VSITE!</h1>
+    <p>Za rezervaciju termina molimo prijavite se.</p>
+    <a class="btn btn-primary" asp-action="Login" asp-controller="User">Prijavi se</a>
+    <a class="btn btn-secondary" asp-action="Register" asp-controller="User">Registriraj se</a>
+</div>
+
+<!-- Slika koja zauzima 50% visine ekrana i osigurava razmak ispod gumba -->
+<div style="height: 50vh; position: relative; margin-top: 20px;">
+    <img src="~/images/Home_page.jpeg" alt="Frizerski Salon" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;" />
+</div>
