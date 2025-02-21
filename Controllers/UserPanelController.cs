@@ -255,7 +255,7 @@ namespace FrizerskiSalon_VSITE.Controllers
                 return View("~/Views/User/EditReservation.cshtml", reservation);
             }
 
-            // ✅ Spriječiti rezervaciju u prošlosti
+            // Spriječiti rezervaciju u prošlosti
             DateTime now = DateTime.Now;
             DateTime selectedDateTime = reservation.ReservationDate.Date + reservation.ReservationTime;
 
@@ -266,7 +266,7 @@ namespace FrizerskiSalon_VSITE.Controllers
                 return View("~/Views/User/EditReservation.cshtml", reservation);
             }
 
-            // ✅ Spriječiti preklapanje termina
+            // Spriječiti preklapanje termina
             int duration = ExtractDurationFromDescription(service.Description);
             TimeSpan newEndTime = reservation.ReservationTime + TimeSpan.FromMinutes(duration);
 
@@ -287,7 +287,7 @@ namespace FrizerskiSalon_VSITE.Controllers
                 return View("~/Views/User/EditReservation.cshtml", reservation);
             }
 
-            // ✅ Ažuriranje rezervacije
+            // Ažuriranje rezervacije
             existingReservation.CustomerName = reservation.CustomerName;
             existingReservation.ReservationDate = reservation.ReservationDate;
             existingReservation.ReservationTime = reservation.ReservationTime;
